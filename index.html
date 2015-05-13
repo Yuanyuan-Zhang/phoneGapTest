@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html ng-app="newsApp">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seneca Website</title>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.10/angular.js"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<style>
+body { font-family: arial, sans-serif; font-size: 20px; }
+
+  .green { color: rgb(13, 177, 75); }
+  .blue { color: rgb(27, 110, 189); }
+  .red { color: rgb(239, 70, 56); }
+  .white { color: white; }
+
+  #menubar { background-color:rgb(51,50,51); color:white; font-family: arial, sans-serif; font-size: 18px; }
+  #menubar img { height: 60px; }
+  #view { padding-left: 0; padding-right: 0; margin-top: 60px; }
+  #view img { width: 60px; height: 60px; margin-right: 20px; }
+
+  .dropdown-menu { background-color:rgb(51,50,51); color: white; padding: 0 50px; }
+  
+  .open > .dropdown-menu { 
+    background-color:rgb(51,50,51);
+ 	
+	padding: 10px 30px 20px 30px;
+  	box-shadow-bottom: 0 5px 10px rgba(0, 0, 0, .8);
+	-moz-box-shadow: 0px 3px 3px rgba(0, 0, 0, .8);
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .8);
+	text-align:center;
+	position: fixed;
+	top: -20px;
+  }
+  .open > .dropdown-menu span { font-size: 18px; color: white; }
+  .open > .dropdown-menu li { padding: 8px 0; }
+  
+  #mail { font-size: 14px; }
+
+  #avatar img { width: 60px; }
+    
+</style>
+<script>
+var newsApp = angular.module('newsApp', [
+  'newsControllers',
+  'newsFactory'
+]);
+
+var newsFactory = angular.module('newsFactory', []);
+//current user info
+newsFactory.factory('userInfo', function($http) {
+  return {
+    list: function (callback){
+      $http({
+        method: 'GET',
+        url: '../news/user.json',
+        cache: true
+      }).success(callback);
+    }
+  };
+});
+
+var newsControllers = angular.module('newsControllers', []);
+ 
+newsControllers.controller('NewsMenuCtrl', function ($scope, userInfo) {
+  $scope.now = new Date();
+//burger menu drop drown info
+  userInfo.list(function(result) {
+    $scope.user = result;
+  }); 
+});
+</script>
+</head>
+<body>
+<nav id="menubar" class="navbar navbar-inverse navbar-fixed-top" ng-controller="NewsMenuCtrl">
+      <span class="dropdown" >
+        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+            <img id="burger" src="../news/image/burger-icon.jpg"></img>
+        </a>
+        <ul class="dropdown-menu no-collapse"  role="menu">
+		  <li class="dropdown-header"><span>{{user.name}}<span></li>
+		  <li><a href="javascript:void(0)"><span id="mail">{{user.mail}}</span></a></li>
+		  <li id="avatar"><img src="../news/image/burgermenuimage.png"></li>
+		  <li><a href="javascript:void(0)"><span>{{user.campus}}</span></a></li>
+          <li><a href="#"><span>Home</span></a></li>
+		  <li><a href="../news/index.html"><span>News</span></a></li>
+		  <li><a href="index.html"><span>Seneca Websites</span></a></li>
+		  <li><a href="http://www.senecacollege.ca/campuses/newnhamlocation.html"><span>Maps</span></a></li>
+		  <li><a href="#"><span>Setting</span></a></li> 
+	    </ul>
+      </span>
+      <span>{{now | date:'EEE, MMM, dd, yyyy'}}</span>
+      <span>{{now | date:'hh:mm a'}}</span>
+  </nav> 
+<div class="panel panel-default" id="view">
+  <ul class="list-group">
+   <li class="list-group-item">
+     <a href="http://www.senecacollege.ca/">
+        <img src="image/Seneca-Website.png" width="60" height="60" >
+        <span class="red">Seneca Websites</span>
+     </a>
+   </li>
+   
+   <li class="list-group-item">
+     <a href="http://www.senecacollege.ca/ce/index.html">
+        <img src="image/Part-time-student.png">
+        <span class="red">Part-time Studies</span>
+     </a>
+   </li>
+   
+    <li class="list-group-item">
+     <a href="http://www.senecacollege.ca/international/">
+       <img src="image/InternationalStudent.png">
+       <span class="red">International Student</span>
+     </a>
+   </li>
+   
+   <li class="list-group-item">
+     <a href="http://www.senecacollege.ca/alumni/index.html">
+       <img src="image/Alumni.png">
+       <span class="red">Seneca Alumni</span>
+     </a>
+   </li>
+  </ul> 
+</div>  
+</body>
+</html>
